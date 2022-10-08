@@ -5,13 +5,12 @@ function append(parent, enfant) {
     return parent.appendChild(enfant);
 }
 //Récupération de l'ID dans l'URL
-const qStr = window.location.search;
+let urlPage = document.location.href; 
+let url = new URL(urlPage);
+let search_params = new URLSearchParams(url.search); 
+var idProduct = search_params.get('id');
 
-const urlParams = new URLSearchParams(qStr);
-
-const id = urlParams.get('id');
-
-const urlApi = 'http://localhost:3000/api/products/' + id;
+const urlApi = `http://localhost:3000/api/products/${idProduct}`;
 //-----------------------------------DEBUT DU FETCH----------------------------------------------------//
 fetch(urlApi)  //Recupère l'url de l'api
 .then((resp) => resp.json()     // vérifie la promesse/reponse
@@ -55,64 +54,53 @@ fetch(urlApi)  //Recupère l'url de l'api
 
 // Récupération des détails de la commande à venir dans le local storage 
 //Dynamique, s'actualiser avant qu'on ne clique sur "ajouter au panier"
-
+const quantity = document.getElementById('quantity');
 const addToCart = document.getElementById('addToCart');  
 
 
 //---------------------------------Debut addEventListener 'click'------------------------------------------//
 //-> Ecoute l'evenement 'click' sur le bouton d'ajout au panier
-function getColor() {
-    let color = document.querySelector(`#colors`);
-    return color.value;
-};
+addToCart.addEventListener("click", () =>{
 
-// Récuperer la quantité choisie
-function getQuantity() {
-    let qty = document.querySelector(`#quantity`);
-    return qty.value;
-};
-
-const addToStorage = (id, color, quantity) =>{
-    let existingCart = JSON.parse(localStorage.getItem("productsInCart"));
+//Objet oneProduct représentant les caractéristiques du produit à ajouter au panier (id + couleur + quantité du produit)
     let oneProduct = {
-        id : id,
-        color : color,  
-        quantity : quantity
+        id : idProduct,
+        color : colors.value,
+        quantity : quantity.value
     };
 
-    //Vérification des champs 
-    if(quantity < 1 || quantity > 100 || color == ""){
-            return alert(`Veuillez choisir un coloris et sélectionner nombre d'articles valide`);
-    }else{
+//Variable qui récupère un panier déjà existant
+    let existingCart = JSON.parse(localStorage.getItem("productsInCart"));
+    
+//Fonction qui chck l'existance d'un produit d'une certaine couleur dans le panier, s'il existe on ajoute la quantity supplémentaire voulu
+    const checkProductsInCart = () =>{
+        
+        
+    };
+//On vérifie si la sélection est valide
+    if(quantity.value < 1 || quantity.value > 100 || colors.value == ""){
+        return alert(`Veuillez choisir un coloris et sélectionner nombre d'articles valide`);
+    };
+//Si la selection est valide on vérifie s'il existe déjà la clé "productsInCart", si oui on inject simplement l'objet dans le tableau qu'on rajoute ensuite dans le localStorage
+    if(existingCart){
+        for(let i = 0; i <= existingCart.length; i ++){
+            if((existingCart[i].id == idProduct) && (existingCart[i].color == oneProduct.color)){
+                existingCart[i].quantity = String(Number(existingCart[i].quantity) + Number(oneProduct.quantity));
+                console.log("variante existante");
+                console.log(oneProduct);
+                break
 
-        if(localStorage.length === 0){
-            existingCart =[{id : id, color : color,  quantity : quantity}];
-            alert("LocalStorage est vide donc on injecte le premier produit ! ");
-        }else{
-            let existingProduct = false;
-            existingCart.forEach(produit =>{
-                if(produit.id === oneProduct.id && produit.color === oneProduct.color){
-                    produit.quantity = JSON.stringify(Number(produit.quantity) + Number(oneProduct.quantity));
-                    existingProduct = true;
-                }
-            });
-
-            if(existingProduct == false){
+            }else{
                 existingCart.push(oneProduct);
+                console.log("variante INexistante");
             };
         };
+        console.log("if after check est censé ajouter l'élement ou la quantité au storage");
+    }else{   //Si pas de localStorage, créer le tableau et injecter le produit dans le localStorage 
+        existingCart = [{id : idProduct, color : colors.value, quantity : quantity.value}];
     };
     localStorage.setItem("productsInCart", JSON.stringify(existingCart));
-
-};
-
-addToCart.addEventListener("click", () =>{
-    let color = getColor();
-    let quantity = getQuantity();
-    addToStorage(id, color, quantity);
-    
 });
 //-------------------------------Fin addEventListener 'click'------------------------------------------//
-
 
 
