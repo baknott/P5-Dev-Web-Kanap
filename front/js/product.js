@@ -90,9 +90,10 @@ const addToStorage = (id, color, quantity) =>{
             alert("LocalStorage est vide donc on injecte le premier produit ! ");
         }else{
             let existingProduct = false;
-            existingCart.forEach(produit =>{
-                if(produit.id === oneProduct.id && produit.color === oneProduct.color){
-                    produit.quantity = JSON.stringify(Number(produit.quantity) + Number(oneProduct.quantity));
+            
+            existingCart.forEach(oneProductInCart =>{
+                if(oneProductInCart.id === oneProduct.id && oneProductInCart.color === oneProduct.color){
+                    oneProductInCart.quantity = JSON.stringify(Number(oneProductInCart.quantity) + Number(oneProduct.quantity));
                     existingProduct = true;
                 }
             });

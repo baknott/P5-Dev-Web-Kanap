@@ -18,37 +18,47 @@ fetch(urlApi)  //Recupère l'url de l'api
         };
         alert(dataToReturn);
     };
-    
+
+ 
+
+    for (i = 0; i < data.length; i ++) { 
+        existingCart.forEach(oneProductInCart =>{
+            if(oneProductInCart.id === data[i]._id){
+                alert("ON AVANCE GRACE A " + data[i]._id);
+                let cartProducts = 
+                    `<article class="cart__item" data-id="${data[i]._id}" data-color="${oneProductInCart.color}">
+                        <div class="cart__item__img">
+                            <img src="${data[i].imageUrl}" alt="${data[i].altTxt}">
+                        </div>
+                        <div class="cart__item__content">
+                            <div class="cart__item__content__description">
+                                <h2>${data[i].name}</h2>
+                                <p>${oneProductInCart.color}</p>
+                                <p>${data[i].price} €</p>
+                            </div>
+                            <div class="cart__item__content__settings">
+                                <div class="cart__item__content__settings__quantity">
+                                    <p>Qté : ${oneProductInCart.quantity}</p>
+                                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${existingCart[i].quantity}">
+                                </div>
+                                <div class="cart__item__content__settings__delete">
+                                    <p class="deleteItem">Supprimer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>`;
+                    //On transforme l'élément allProducts(string) en document HTML
+                    const showAllProducts = parser.parseFromString(cartProducts, "text/html");
+                    //On affiche les différents éléments
+                    cart__items.appendChild(showAllProducts.body.firstChild);
+            }
+        });
+    };
     
     for (i = 0; i < existingCart.length; i ++) { 
         //Paterne des éléments à créer sous forme de string
-       
-        let cartProducts = 
-        `<article class="cart__item" data-id="${existingCart[i].id}" data-color="${existingCart[i].color}">
-            <div class="cart__item__img">
-                <img src="${data[i].imageUrl}" alt="${data[i].altTxt}">
-            </div>
-            <div class="cart__item__content">
-                <div class="cart__item__content__description">
-                    <h2>${data[i].name}</h2>
-                    <p>${existingCart[i].color}</p>
-                    <p>${data[i].price} €</p>
-                </div>
-                <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                        <p>Qté : ${existingCart[i].quantity}</p>
-                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${existingCart[i].quantity}">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                        <p class="deleteItem">Supprimer</p>
-                    </div>
-                </div>
-            </div>
-        </article>`;
-        //On transforme l'élément allProducts(string) en document HTML
-        const showAllProducts = parser.parseFromString(cartProducts, "text/html");
-        //On affiche les différents éléments
-        cart__items.appendChild(showAllProducts.body.firstChild);
+        
+        
     }
     let quantityInput = document.querySelector('input.itemQuantity');
     console.log(quantityInput);
