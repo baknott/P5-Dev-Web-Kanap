@@ -4,27 +4,16 @@ const urlApi = 'http://localhost:3000/api/products';
 fetch(urlApi)  //Recupère l'url de l'api
 .then((resp) => resp.json()     // vérifie la promesse/reponse
 .then((data) => {   
+    
     const parser = new DOMParser();
     const cart__items = document.getElementById('cart__items');
     let existingCart = JSON.parse(localStorage.getItem("productsInCart"));
     let allItems = [data]; 
     console.log(allItems);
-    //Boucle For, pour chaque élément dans l'api, doit créer un nouvel élément 
-    const dataExtractor = (idProductInCart, dataToExtract) =>{
-        for (i = 0; i < data.length; i ++) { 
-            if (idProductInCart === data[0]._id){
-                let dataToReturn = data[0].dataToExtract;
-            };
-        };
-        alert(dataToReturn);
-    };
-
- 
-
+    //Boucle For, pour chaque élément de l'API présent dans le localStorage, on doit créer un nouveau bloc     
     for (i = 0; i < data.length; i ++) { 
         existingCart.forEach(oneProductInCart =>{
             if(oneProductInCart.id === data[i]._id){
-                alert("ON AVANCE GRACE A " + data[i]._id);
                 let cartProducts = 
                     `<article class="cart__item" data-id="${data[i]._id}" data-color="${oneProductInCart.color}">
                         <div class="cart__item__img">
@@ -39,29 +28,34 @@ fetch(urlApi)  //Recupère l'url de l'api
                             <div class="cart__item__content__settings">
                                 <div class="cart__item__content__settings__quantity">
                                     <p>Qté : ${oneProductInCart.quantity}</p>
-                                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${existingCart[i].quantity}">
+                                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${oneProductInCart.quantity}">
                                 </div>
                                 <div class="cart__item__content__settings__delete">
-                                    <p class="deleteItem">Supprimer</p>
+                                    <p class="deleteItem" onclick="deleteFunction('${oneProductInCart.id}','${oneProductInCart.color}')">Supprimer</p>
                                 </div>
                             </div>
                         </div>
                     </article>`;
+                    
                     //On transforme l'élément allProducts(string) en document HTML
                     const showAllProducts = parser.parseFromString(cartProducts, "text/html");
                     //On affiche les différents éléments
                     cart__items.appendChild(showAllProducts.body.firstChild);
+                    deleteFunction = (idProduitCible, colorProduitCible) =>{
+                        for (i = 0; i < existingCart.length; i ++) { 
+                            if((idProduitCible === existingCart[i].id) && (colorProduitCible === existingCart[i].color)){
+                                existingCart.splice(i, 1);
+                                localStorage.setItem("productsInCart", JSON.stringify(existingCart));
+                                location.reload();
+                            }
+                        }   
+                    
+                    };
             }
         });
     };
     
-    for (i = 0; i < existingCart.length; i ++) { 
-        //Paterne des éléments à créer sous forme de string
-        
-        
-    }
-    let quantityInput = document.querySelector('input.itemQuantity');
-    console.log(quantityInput);
+
 }))
 
 // Attrape l'erreur lorsqu'elle se produit 
