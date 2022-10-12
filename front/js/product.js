@@ -111,7 +111,12 @@ addToCart.addEventListener("click", () =>{
     let color = getColor();
     let quantity = getQuantity();
     addToStorage(id, color, quantity);
-    
+    if(quantity == 1){
+        alert("Votre article a été ajouté au panier !")
+    }else{
+        alert("Vos articles ont été ajoutés au panier !")
+    };
+    window.location.href = "http://127.0.0.1:5500/front/html/index.html";
 });
 //-------------------------------Fin addEventListener 'click'------------------------------------------//
 
