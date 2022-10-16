@@ -61,11 +61,12 @@ fetch(urlApi)  //Recupère l'url de l'api
                         let inputValue = getInput.value;
                         for (i = 0; i < existingCart.length; i ++) { 
                             if((idProduitCible === existingCart[i].id) && (colorProduitCible === existingCart[i].color)){
-                                if(inputValue > existingCart[i].quantity){
-                                    existingCart[i].quantity ++;
-                                }else if(inputValue < existingCart[i].quantity){
-                                    existingCart[i].quantity --;
-                                };
+                                if(inputValue > 100 || inputValue == 0){
+                                    alert("Merci de saisir une quantité entre 1 et 100")
+                                    location.reload();
+                                }else{
+                                    existingCart[i].quantity = inputValue;
+                                }
                                 localStorage.setItem("productsInCart", JSON.stringify(existingCart));
                                 location.reload();
                             }
@@ -83,25 +84,22 @@ fetch(urlApi)  //Recupère l'url de l'api
     //Affichage du nombre total d'articles
     let sumQuantity = 0;
     for (let i = 0; i < existingCart.length; i++) {
-        sumQuantity += existingCart[i].quantity;
+        sumQuantity =  Number(sumQuantity) + Number(existingCart[i].quantity);
     }
-    document.getElementById('totalQuantity').innerHTML = sumQuantity;
+    document.getElementById('totalQuantity').innerHTML = JSON.stringify(sumQuantity);
     
     //Affichage du prix total du panier 
     let totalPriceCart = 0;
     let targetedPrice = 0;
-    function useRegex(input) {
-        let regex = /[0-9]+.*€/i;
-        return regex(input);
-    }
     for (let i = 0; i < existingCart.length; i++) {
         targetedPrice = document.getElementById(existingCart[i].id + existingCart[i].color + "price").textContent;
-        alert(targetedPrice);
-        regexedPrice = useRegex(targetedPrice);
-        alert(regexedPrice);
+        let regex = /[\d]{4}/;
+        regexedPrice = targetedPrice.match(regex);
         totalPriceCart += (existingCart[i].quantity * regexedPrice);
     }
     document.getElementById('totalPrice').innerHTML = totalPriceCart;
+
+    document.getElementById('email').pattern = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/;
 
 }))
 
