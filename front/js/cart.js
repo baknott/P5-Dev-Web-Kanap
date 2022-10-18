@@ -90,17 +90,16 @@ fetch(urlApi)  //Recupère l'url de l'api
     
     //Affichage du prix total du panier 
     let totalPriceCart = 0;
-    let targetedPrice = 0;
+    let onePrice = 0;
     for (let i = 0; i < existingCart.length; i++) {
-        targetedPrice = document.getElementById(existingCart[i].id + existingCart[i].color + "price").textContent;
-        let regex = /[\d]{4}/;
-        regexedPrice = targetedPrice.match(regex);
-        totalPriceCart += (existingCart[i].quantity * regexedPrice);
+        onePrice = document.getElementById(existingCart[i].id + existingCart[i].color + "price").textContent;
+        let regexPrice = /[\d]{4}/;
+        oneRegexedPrice = onePrice.match(regexPrice);
+        totalPriceCart += (existingCart[i].quantity * oneRegexedPrice);
     }
     document.getElementById('totalPrice').innerHTML = totalPriceCart;
 
-    document.getElementById('email').pattern = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/;
-
+    
 }))
 
 // Attrape l'erreur lorsqu'elle se produit 
@@ -108,3 +107,69 @@ fetch(urlApi)  //Recupère l'url de l'api
   alert("UNE ERREUR EST SURVENUE");
 });
 
+
+//----------------------- COMMANDE-------------------------------------------------------------
+    //Declarations de variables
+    const firstName = document.getElementById('firstName');
+    const lastName = document.getElementById('lastName');
+    const address = document.getElementById('address');
+    const city = document.getElementById('city');
+    const email = document.getElementById('email');
+    const order = document.getElementById('order');
+    const orderNumber = 0;
+
+    class Order{
+        constructor(firstName, lastName, address, city, email){
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.address = address;
+            this.city = city;
+            this.email = email;
+        }
+    }
+    
+    //----Verification des champs du formulaire ---//
+    const checkFields = () =>{
+        let patternEmail = /[\w]+@[\w]+\.[a-z]{2,6}$/;
+        let patternNamesAndCity = /[a-zA-Z-]+/;
+        let patternAddress = /[a-zA-Z0-9-]+/;
+        let regexEmail = patternEmail.test(email.value);
+        let regexFirstName = patternNamesAndCity.test(firstName.value);
+        let regexLastName = patternNamesAndCity.test(lastName.value);
+        let regexCity = patternNamesAndCity.test(city.value);
+        let regexAddress = patternAddress.test(address.value);
+
+        if(regexEmail && regexFirstName && regexLastName && regexCity && regexAddress){
+            alert('email prenom nom ville et adresse valide !');
+        }
+    }
+    order.addEventListener("submit", () =>{
+        checkFields();
+        const newOrder = new Order(firstName.value, lastName.value, address.value, city.value, email.value);
+        alert(JSON.stringify(newOrder));    
+    });
+
+
+fetch("http://localhost:3000/api/products/order", {
+     
+    // Adding method type
+    method: "POST",
+     
+    // Adding body or contents to send
+    body: JSON.stringify({
+        title: "foo",
+        body: "bar",
+        userId: 1
+    }),
+     
+    // Adding headers to the request
+    headers: {
+        "Content-type": "application/json; charset=UTF-8"
+    }
+})
+ 
+// Converting to JSON
+.then(response => response.json())
+ 
+// Displaying results to console
+.then(json => console.log(json));
