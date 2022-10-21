@@ -1,17 +1,19 @@
+//Fonction qui créer une balise
 function createBalise(element) {
     return document.createElement(element);
 }
+
+//Fonction qui affiche une balise
 function append(parent, enfant) {
     return parent.appendChild(enfant);
 }
+
 //Récupération de l'ID dans l'URL
 const qStr = window.location.search;
-
 const urlParams = new URLSearchParams(qStr);
-
 const id = urlParams.get('id');
-
 const urlApi = 'http://localhost:3000/api/products/' + id;
+
 //-----------------------------------DEBUT DU FETCH----------------------------------------------------//
 fetch(urlApi)  //Recupère l'url de l'api
 .then((resp) => resp.json()     // vérifie la promesse/reponse
@@ -33,7 +35,8 @@ fetch(urlApi)  //Recupère l'url de l'api
     description.innerHTML = `${data.description}`;
     price.innerHTML = `${data.price}`;
     
-    append(itemImg, img); //Génération de l'image 
+    //Génération de l'image 
+    append(itemImg, img); 
     
     // Génération des options qui 
     const parser = new DOMParser();
@@ -42,9 +45,8 @@ fetch(urlApi)  //Recupère l'url de l'api
         let productsColors = 
             `<option value='${data.colors[i]}'>${data.colors[i]}</option>`;
         const displayColors = parser.parseFromString(productsColors, "text/html");
-        colors.appendChild(displayColors.body.firstChild);}
-    
-        
+        colors.appendChild(displayColors.body.firstChild);
+    }
 }))
 
 // Attrape l'erreur lorsqu'elle se produit 
@@ -60,7 +62,7 @@ const addToCart = document.getElementById('addToCart');
 
 
 //---------------------------------Debut addEventListener 'click'------------------------------------------//
-//-> Ecoute l'evenement 'click' sur le bouton d'ajout au panier
+// récupère la couleur
 function getColor() {
     let color = document.querySelector(`#colors`);
     return color.value;
@@ -72,6 +74,7 @@ function getQuantity() {
     return qty.value;
 };
 
+// Fonction qui envoie les éléments dans le panier
 const addToStorage = (id, color, quantity) =>{
     let existingCart = JSON.parse(localStorage.getItem("productsInCart"));
     let oneProduct = {
@@ -80,21 +83,26 @@ const addToStorage = (id, color, quantity) =>{
         quantity : quantity
     };
 
-    //Vérification des champs 
+    //Vérification des champs et du localstorage 
     if(quantity < 1 || quantity > 100 || color == ""){
             return alert(`Veuillez choisir un coloris et sélectionner nombre d'articles valide`);
     }else{
 
         if(localStorage.length === 0){
             existingCart =[{id : id, color : color,  quantity : quantity}];
-            alert("LocalStorage est vide donc on injecte le premier produit ! ");
         }else{
             let existingProduct = false;
             
             existingCart.forEach(oneProductInCart =>{
                 if(oneProductInCart.id === oneProduct.id && oneProductInCart.color === oneProduct.color){
-                    oneProductInCart.quantity = JSON.stringify(Number(oneProductInCart.quantity) + Number(oneProduct.quantity));
-                    existingProduct = true;
+                    if((Number(oneProductInCart.quantity) + Number(oneProduct.quantity)) > 100 || (Number(oneProductInCart.quantity) + Number(oneProduct.quantity)) == 100){
+                        alert("La quantité maximum de 100 articles pour cette variante a été atteinte")
+                        oneProductInCart.quantity = "100";
+                        existingProduct = true;
+                    }else{
+                        oneProductInCart.quantity = JSON.stringify(Number(oneProductInCart.quantity) + Number(oneProduct.quantity));
+                        existingProduct = true;
+                    }
                 }
             });
 
@@ -104,9 +112,9 @@ const addToStorage = (id, color, quantity) =>{
         };
     };
     localStorage.setItem("productsInCart", JSON.stringify(existingCart));
-
 };
 
+// Evenement Click qui execute la fonction addToStorage
 addToCart.addEventListener("click", () =>{
     let color = getColor();
     let quantity = getQuantity();
