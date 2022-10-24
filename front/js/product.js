@@ -38,7 +38,7 @@ fetch(urlApi)  //Recupère l'url de l'api
     //Génération de l'image 
     append(itemImg, img); 
     
-    // Génération des options qui 
+    // Génération des options couleurs 
     const parser = new DOMParser();
     const colors = document.querySelector('#colors');
     for (i = 0; i < data.colors.length; i++) {

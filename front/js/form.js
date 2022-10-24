@@ -7,7 +7,50 @@ const address = document.getElementById('address');
 const city = document.getElementById('city');
 const email = document.getElementById('email');
 const form = document.querySelector('.cart__order__form');
-const orderNumber = 0;
+//----Regex ---//
+const patternEmail = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+const patternNamesAndCity = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/i;
+const patternAddress = /^[a-zA-Z0-9\s,.'-]{3,}$/;
+// Retourne un nom de champ
+const fieldNames = {
+    prenom : "prénom",
+    nom : "nom",
+    adresse : "adresse",
+    ville : "ville",
+    email : "adresse email"
+}
+// Messages d'erreur
+const firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
+const lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
+const addressErrorMsg = document.getElementById('addressErrorMsg');
+const cityErrorMsg = document.getElementById('cityErrorMsg');
+const emailErrorMsg = document.getElementById('emailErrorMsg');
+// fonction qui analyse la validité d'un champ en fonction des paramètres utilisés
+const validField = (anInput, aRegex, anErrorMsg, fieldName) => {
+    if (aRegex.test(anInput.value)) {
+        anErrorMsg.innerText = ``;
+        return true;
+    }else{
+        anErrorMsg.innerText = `Merci de bien vouloir corriger votre ` + fieldName;
+        return false;
+    } 
+}
+//Verification de chaque champ du formulaire
+firstName.addEventListener('change', function() {
+    validField(firstName, patternNamesAndCity, firstNameErrorMsg, fieldNames.prenom);
+});
+lastName.addEventListener('change', function() {
+    validField(lastName, patternNamesAndCity, lastNameErrorMsg, fieldNames.nom);
+});
+address.addEventListener('change', function() {
+    validField(address, patternAddress, addressErrorMsg, fieldNames.adresse);
+});
+city.addEventListener('change', function() {
+    validField(city, patternNamesAndCity, cityErrorMsg, fieldNames.ville);
+});
+email.addEventListener('change', function() {
+    validField(email, patternEmail, emailErrorMsg, fieldNames.email);
+});
 
 // récupère les données du formulaire, les stocke dans un objet "contact"
 // + récupère les ID des produits du panier
@@ -32,23 +75,11 @@ const createObjectToSend = () =>{
     return objectToSend
 }
 //Fonction qui envoie les données du formulaire + les id des produits du panier vers le serveur
-const submitOrder = () =>{
-    
-    //----Regex ---//
-    let patternEmail = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
-    let patternNamesAndCity = /[a-zA-Z-]+/;
-    let patternAddress = /[a-zA-Z0-9-]+/;
-    
-    //----Test des regex-----//
-    let regexEmail = patternEmail.test(email.value);
-    let regexFirstName = patternNamesAndCity.test(firstName.value);
-    let regexLastName = patternNamesAndCity.test(lastName.value);
-    let regexCity = patternNamesAndCity.test(city.value);
-    let regexAddress = patternAddress.test(address.value);
+const submitOrder = () =>{    
     if(localStorage.length === 0 || existingCart.length === 0){
         alert('votre panier est vide !')
     }else{
-        if(regexEmail && regexFirstName && regexLastName && regexCity && regexAddress){
+        if(validField(firstName, patternNamesAndCity, firstNameErrorMsg, fieldNames.prenom) && validField(lastName, patternNamesAndCity, lastNameErrorMsg, fieldNames.nom) && validField(address, patternAddress, addressErrorMsg, fieldNames.adresse) && validField(city, patternNamesAndCity, cityErrorMsg, fieldNames.ville) && validField(email, patternEmail, emailErrorMsg, fieldNames.email)){
             let objectToSend = createObjectToSend();
             fetch('http://localhost:3000/api/products/order/', {
                 

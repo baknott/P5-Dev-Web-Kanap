@@ -44,6 +44,7 @@ if(localStorage.length === 0 || existingCart.length === 0){
                         const showAllProducts = parser.parseFromString(cartProducts, "text/html");
                         //On affiche les différents éléments
                         cart__items.appendChild(showAllProducts.body.firstChild);
+                        // suppression du produit
                         deleteFunction = (idProduitCible, colorProduitCible,quantityProduitCible) =>{
                             for (i = 0; i < existingCart.length; i ++) { 
                                 
