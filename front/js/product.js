@@ -61,7 +61,6 @@ fetch(urlApi)  //Recupère l'url de l'api
 const addToCart = document.getElementById('addToCart');  
 
 
-//---------------------------------Debut addEventListener 'click'------------------------------------------//
 // récupère la couleur
 function getColor() {
     let color = document.querySelector(`#colors`);
@@ -92,7 +91,6 @@ const addToStorage = (id, color, quantity) =>{
             existingCart =[{id : id, color : color,  quantity : quantity}];
         }else{
             let existingProduct = false;
-            
             existingCart.forEach(oneProductInCart =>{
                 if(oneProductInCart.id === oneProduct.id && oneProductInCart.color === oneProduct.color){
                     if((Number(oneProductInCart.quantity) + Number(oneProduct.quantity)) > 100 || (Number(oneProductInCart.quantity) + Number(oneProduct.quantity)) == 100){
@@ -119,14 +117,12 @@ addToCart.addEventListener("click", () =>{
     let color = getColor();
     let quantity = getQuantity();
     addToStorage(id, color, quantity);
-    if(quantity == 1){
+    if(quantity == 1 && color != ""){
         alert("Votre article a été ajouté au panier !")
-    }else{
+    }else if(quantity > 1 && color != ""){
         alert("Vos articles ont été ajoutés au panier !")
     };
-    window.location.href = "http://127.0.0.1:5500/front/html/index.html";
 });
-//-------------------------------Fin addEventListener 'click'------------------------------------------//
 
 
 

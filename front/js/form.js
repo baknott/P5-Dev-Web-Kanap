@@ -25,7 +25,7 @@ const lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
 const addressErrorMsg = document.getElementById('addressErrorMsg');
 const cityErrorMsg = document.getElementById('cityErrorMsg');
 const emailErrorMsg = document.getElementById('emailErrorMsg');
-// fonction qui analyse la validité d'un champ en fonction des paramètres utilisés
+// fonction qui analyse la validité d'un champ en fonction des paramètres choisis
 const validField = (anInput, aRegex, anErrorMsg, fieldName) => {
     if (aRegex.test(anInput.value)) {
         anErrorMsg.innerText = ``;
@@ -35,7 +35,7 @@ const validField = (anInput, aRegex, anErrorMsg, fieldName) => {
         return false;
     } 
 }
-//Verification de chaque champ du formulaire
+//---Verification de chaque champ du formulaire----//
 firstName.addEventListener('change', function() {
     validField(firstName, patternNamesAndCity, firstNameErrorMsg, fieldNames.prenom);
 });
@@ -51,6 +51,7 @@ city.addEventListener('change', function() {
 email.addEventListener('change', function() {
     validField(email, patternEmail, emailErrorMsg, fieldNames.email);
 });
+//--------------//
 
 // récupère les données du formulaire, les stocke dans un objet "contact"
 // + récupère les ID des produits du panier

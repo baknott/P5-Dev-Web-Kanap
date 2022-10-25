@@ -40,43 +40,43 @@ if(localStorage.length === 0 || existingCart.length === 0){
                             </div>
                         </article>`;
                         
-                        //On transforme l'élément allProducts(string) en document HTML
-                        const showAllProducts = parser.parseFromString(cartProducts, "text/html");
-                        //On affiche les différents éléments
-                        cart__items.appendChild(showAllProducts.body.firstChild);
-                        // suppression du produit
-                        deleteFunction = (idProduitCible, colorProduitCible,quantityProduitCible) =>{
-                            for (i = 0; i < existingCart.length; i ++) { 
-                                
-                                if((idProduitCible === existingCart[i].id) && (colorProduitCible === existingCart[i].color)){
-                                    existingCart.splice(i, 1);
-                                    localStorage.setItem("productsInCart", JSON.stringify(existingCart));
-                                    if(quantityProduitCible == 1){
-                                        alert("Votre article a été supprimé du panier !")
-                                    }else{
-                                        alert("Vos articles ont été supprimés au panier !")
-                                    };
-                                    location.reload();
-                                }
-                            }
-                        };
-                        updateQuantity = (idProduitCible, colorProduitCible) =>{
-                            let getInput = document.getElementById(idProduitCible + colorProduitCible);
-                            let inputValue = getInput.value;
-                            for (i = 0; i < existingCart.length; i ++) { 
-                                if((idProduitCible === existingCart[i].id) && (colorProduitCible === existingCart[i].color)){
-                                    if(inputValue > 100 || inputValue == 0){
-                                        alert("Merci de saisir une quantité entre 1 et 100")
-                                        location.reload();
-                                    }else{
-                                        existingCart[i].quantity = inputValue;
-                                    }
-                                    localStorage.setItem("productsInCart", JSON.stringify(existingCart));
-                                    location.reload();
-                                }
-                            }
+                    //On transforme l'élément allProducts(string) en document HTML
+                    const showAllProducts = parser.parseFromString(cartProducts, "text/html");
+                    //On affiche les différents éléments
+                    cart__items.appendChild(showAllProducts.body.firstChild);
+                    // suppression du produit
+                    deleteFunction = (idProduitCible, colorProduitCible,quantityProduitCible) =>{
+                        for (i = 0; i < existingCart.length; i ++) { 
                             
-                        };
+                            if((idProduitCible === existingCart[i].id) && (colorProduitCible === existingCart[i].color)){
+                                existingCart.splice(i, 1);
+                                localStorage.setItem("productsInCart", JSON.stringify(existingCart));
+                                if(quantityProduitCible == 1){
+                                    alert("Votre article a été supprimé du panier !")
+                                }else{
+                                    alert("Vos articles ont été supprimés au panier !")
+                                };
+                                location.reload();
+                            }
+                        }
+                    };
+                    updateQuantity = (idProduitCible, colorProduitCible) =>{
+                        let getInput = document.getElementById(idProduitCible + colorProduitCible);
+                        let inputValue = getInput.value;
+                        for (i = 0; i < existingCart.length; i ++) { 
+                            if((idProduitCible === existingCart[i].id) && (colorProduitCible === existingCart[i].color)){
+                                if(inputValue > 100 || inputValue == 0){
+                                    alert("Merci de saisir une quantité entre 1 et 100")
+                                    location.reload();
+                                }else{
+                                    existingCart[i].quantity = inputValue;
+                                }
+                                localStorage.setItem("productsInCart", JSON.stringify(existingCart));
+                                location.reload();
+                            }
+                        }
+                        
+                    };
                 }
             });
         };
