@@ -86,29 +86,33 @@ const addToStorage = (id, color, quantity) =>{
     if(quantity < 1 || quantity > 100 || color == ""){
             return alert(`Veuillez choisir un coloris et sélectionner nombre d'articles valide`);
     }else{
-
+        //Si localStorage vide
         if(localStorage.length === 0){
             existingCart =[{id : id, color : color,  quantity : quantity}];
         }else{
             let existingProduct = false;
+            //On parcourt le localStorage 
             existingCart.forEach(oneProductInCart =>{
+                //Si le produit existe
                 if(oneProductInCart.id === oneProduct.id && oneProductInCart.color === oneProduct.color){
+                    //Si Quantité > 100 on maximise à 100 + alertz
                     if((Number(oneProductInCart.quantity) + Number(oneProduct.quantity)) > 100 || (Number(oneProductInCart.quantity) + Number(oneProduct.quantity)) == 100){
                         alert("La quantité maximum de 100 articles pour cette variante a été atteinte")
                         oneProductInCart.quantity = "100";
                         existingProduct = true;
-                    }else{
+                    }else{ //Sinon on additionne la quantité deja présente
                         oneProductInCart.quantity = JSON.stringify(Number(oneProductInCart.quantity) + Number(oneProduct.quantity));
                         existingProduct = true;
                     }
                 }
             });
-
+            //Si le produit n'existe pas on le push
             if(existingProduct == false){
                 existingCart.push(oneProduct);
             };
         };
     };
+    //On actualise le localStorage
     localStorage.setItem("productsInCart", JSON.stringify(existingCart));
 };
 

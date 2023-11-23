@@ -80,6 +80,7 @@ const submitOrder = () =>{
     if(localStorage.length === 0 || existingCart.length === 0){
         alert('votre panier est vide !')
     }else{
+        //On vérifie la validité de tous les champs
         if(validField(firstName, patternNamesAndCity, firstNameErrorMsg, fieldNames.prenom) && validField(lastName, patternNamesAndCity, lastNameErrorMsg, fieldNames.nom) && validField(address, patternAddress, addressErrorMsg, fieldNames.adresse) && validField(city, patternNamesAndCity, cityErrorMsg, fieldNames.ville) && validField(email, patternEmail, emailErrorMsg, fieldNames.email)){
             let objectToSend = createObjectToSend();
             fetch('http://localhost:3000/api/products/order/', {

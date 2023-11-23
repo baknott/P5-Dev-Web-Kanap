@@ -2,6 +2,7 @@
 const urlApi = 'http://localhost:3000/api/products';
 
 let existingCart = JSON.parse(localStorage.getItem("productsInCart"));
+//Si le panir est vide
 if(localStorage.length === 0 || existingCart.length === 0){
     document.querySelector('h1').innerHTML = "Votre panier est vide";
 }else{  
@@ -46,8 +47,9 @@ if(localStorage.length === 0 || existingCart.length === 0){
                     cart__items.appendChild(showAllProducts.body.firstChild);
                     // suppression du produit
                     deleteFunction = (idProduitCible, colorProduitCible,quantityProduitCible) =>{
+                        //On parcourt le panier
                         for (i = 0; i < existingCart.length; i ++) { 
-                            
+                            //On cherche le produit passé en paramètre
                             if((idProduitCible === existingCart[i].id) && (colorProduitCible === existingCart[i].color)){
                                 existingCart.splice(i, 1);
                                 localStorage.setItem("productsInCart", JSON.stringify(existingCart));
@@ -60,15 +62,20 @@ if(localStorage.length === 0 || existingCart.length === 0){
                             }
                         }
                     };
+                    //Modification de la quantité du produit
                     updateQuantity = (idProduitCible, colorProduitCible) =>{
+                        //On récupère l'ID de la quantité du produit ciblé
                         let getInput = document.getElementById(idProduitCible + colorProduitCible);
+                        //On récupère sa valeur
                         let inputValue = getInput.value;
+                        //On parcourt le le panier pour cibler le produit à modifier
                         for (i = 0; i < existingCart.length; i ++) { 
                             if((idProduitCible === existingCart[i].id) && (colorProduitCible === existingCart[i].color)){
+                                //Si la quantité est invalide on affiche une erreur et on arrète la modification
                                 if(inputValue > 100 || inputValue == 0){
                                     alert("Merci de saisir une quantité entre 1 et 100")
                                     location.reload();
-                                }else{
+                                }else{//Sinon on actualise la quantité
                                     existingCart[i].quantity = inputValue;
                                 }
                                 localStorage.setItem("productsInCart", JSON.stringify(existingCart));
